@@ -1,16 +1,15 @@
 package com.devsuperior.bds04.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.devsuperior.bds04.dto.EventDTO;
 import com.devsuperior.bds04.entities.City;
 import com.devsuperior.bds04.entities.Event;
 import com.devsuperior.bds04.repositories.EventRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EventService {
@@ -19,9 +18,9 @@ public class EventService {
 	public EventRepository eventRepository;
 	
 	@Transactional(readOnly = true)
-	public List<EventDTO> findAll(){
-		List<Event> events = eventRepository.findAll();
-		return events.stream().map(x -> new EventDTO(x)).collect(Collectors.toList());
+	public Page<EventDTO> findAll(Pageable pageable){
+		Page<Event> events = eventRepository.findAll(pageable);
+		return events.map(x -> new EventDTO(x));
 	}
 	
 	@Transactional(readOnly = true)
